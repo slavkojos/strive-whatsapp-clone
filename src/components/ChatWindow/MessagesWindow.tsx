@@ -8,10 +8,20 @@ import ScrollableFeed from "react-scrollable-feed";
 
 interface MessagesWindowProps {}
 
-export const MessagesWindow: React.FC<MessagesWindowProps> = ({}) => {
+export const MessagesWindow: React.FC<MessagesWindowProps> = ({ userID, roomData }) => {
+  console.log("roomdata:", roomData);
   return (
     <Box overflowY="auto" h={"100%"} py={20} className="scrollbar-hidden" backgroundColor="gray.900" as={ScrollableFeed} forceScroll={true}>
-      <Flex direction="column" justify="flex-end" px={2}></Flex>
+      <Flex direction="column" justify="flex-end" px={2}>
+        {roomData &&
+          roomData.messages.map((message) => {
+            if (message.senderId._id === userID) {
+              return <OutgoingMessage message={message} />;
+            } else {
+              return <IncomingMessage message={message} />;
+            }
+          })}
+      </Flex>
     </Box>
   );
 };

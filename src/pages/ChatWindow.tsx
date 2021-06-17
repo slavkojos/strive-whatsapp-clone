@@ -14,13 +14,16 @@ interface MutableRefObject<T> {
 }
 function useRef<T>(initialValue: T): MutableRefObject<T>;
 
-export const ChatWindow: React.FC<ChatWindowProps> = ({ userID }) => {
-  const [userData, setUserData] = useState([]);
+export const ChatWindow: React.FC<ChatWindowProps> = ({ userID, match }) => {
+  const [roomData, setRoomData] = useState("");
   const [isLoaded, setisLoaded] = useState(false);
+  const [contactData, setContactData] = useState("");
   const fetchData = useCallback(async () => {
-    const response = await fetch(`http://localhost:4000/whatsapp/rooms/me/${userID}`);
-    setUserData(await response.json());
+    const response = await fetch(`http://localhost:4000/whatsapp/rooms/me/room/${match.params.roomID}`);
+    const data = await response.json();
 
+    setRoomData(data);
+    setContactData(data.users.find((contact) => contact._id !== userID));
     setisLoaded(true);
   }, []);
   useEffect(() => {
@@ -34,6 +37,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userID }) => {
   };
   const [messageInput, setMessageInput] = useState<string>("");
   const messageInputRef = useRef<HTMLInputElement>(null);
+  console.log("contactData", contactData);
+  console.log("roomData", roomData);
 
   return (
     <Container maxW="container.sm" p={0} centerContent>
@@ -41,9 +46,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userID }) => {
         <Flex justify="space-between" align="center" backgroundColor="teal.900" pos="absolute" top="0" left="0" right="0" zIndex={2}>
           <Flex align="center">
             <IconButton variant="ghost" aria-label="back" icon={<IoMdArrowBack />} size="lg" isRound as={RouterLink} to="/" />
-            <Avatar name="Dan Abrahmov" size="sm" src="https://bit.ly/dan-abramov" />
+            <Avatar name="Dan Abrahmov" size="sm" src={contactData.profilePic} />
             <Flex direction="column" ml={3}>
-              <Text>John Doe</Text>
+              <Text>{contactData.username}</Text>
               <Text fontSize="xs">last seen today at 12:02</Text>
             </Flex>
           </Flex>
@@ -59,7 +64,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userID }) => {
             </Menu>
           </Flex>
         </Flex>
-        <MessagesWindow />
+        <MessagesWindow roomData={roomData} userID={userID} />
         <Flex pos="absolute" bottom="0" left="0" right="0" zIndex={2} justify="space-between" align="center" w={"100%"} backgroundColor="gray.800">
           <Flex justify="space-between" align="center" w={"100%"} mx={1}>
             <IconButton variant="ghost" aria-label="back" icon={<HiOutlineEmojiHappy />} size="lg" isRound />
