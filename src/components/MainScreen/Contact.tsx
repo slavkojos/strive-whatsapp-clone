@@ -6,7 +6,6 @@ import "../../pages/styles.css";
 interface ContactProps {}
 
 export const Contact: React.FC<ContactProps> = ({ contact, userID }) => {
-  const [roomData];
   const fetchRoom = async () => {
     const data = {
       users: [userID, contact._id],
