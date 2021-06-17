@@ -1,11 +1,12 @@
 import React from "react";
 import { Flex, Box, Avatar, Text, Badge, Center, Circle, Divider } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import "../../pages/styles.css";
 
 interface ContactProps {}
 
 export const Contact: React.FC<ContactProps> = ({ contact, userID }) => {
+  const history = useHistory()
   const [roomData];
   const fetchRoom = async () => {
     const data = {
@@ -19,7 +20,10 @@ export const Contact: React.FC<ContactProps> = ({ contact, userID }) => {
         },
         body: JSON.stringify(data),
       });
-      return console.log(await response.json());
+      const roomId = await response.json()
+      history.push(`/chat/${roomId}`)
+
+
     } catch (error) {}
   };
   return (
