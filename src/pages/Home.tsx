@@ -14,10 +14,17 @@ const userID = "60ca107f86f4a446d882ebde";
 export const Home: React.FC<HomeProps> = ({}) => {
   const [userData, setUserData] = useState([]);
   const [isLoaded, setisLoaded] = useState(false);
-
+  const [profileData, setProfileData] = useState("");
+  const fetchRoomInfo = async (id) => {
+    const response = await fetch(`http://localhost:4000/whatsapp/users/me/${id}`);
+    const data = await response.json();
+    console.log("roon info ", data);
+    return data;
+  };
   const fetchData = useCallback(async () => {
     const response = await fetch(`http://localhost:4000/whatsapp/rooms/me/${userID}`);
     setUserData(await response.json());
+
     setisLoaded(true);
   }, []);
   useEffect(() => {
@@ -65,7 +72,6 @@ export const Home: React.FC<HomeProps> = ({}) => {
                     userData.userRooms.map((room) => {
                       const contact = room.users.find((user) => user !== userID);
                       console.log("contact: " + contact);
-
                       return <Contact contact={contact} />;
                     })}
                 </Flex>

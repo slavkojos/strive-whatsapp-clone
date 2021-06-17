@@ -6,8 +6,7 @@ import "../../pages/styles.css";
 interface ContactProps {}
 
 export const Contact: React.FC<ContactProps> = ({ contact, userID }) => {
-  const history = useHistory()
-  const [roomData];
+  const history = useHistory();
   const fetchRoom = async () => {
     const data = {
       users: [userID, contact._id],
@@ -20,12 +19,13 @@ export const Contact: React.FC<ContactProps> = ({ contact, userID }) => {
         },
         body: JSON.stringify(data),
       });
-      const roomId = await response.json()
-      history.push(`/chat/${roomId}`)
+      const chatRoomID = await response.json();
 
-
+      history.push(`/chat/${chatRoomID.roomId}`);
     } catch (error) {}
   };
+  console.log("contact prop:", contact);
+
   return (
     <Box _hover={{ backgroundColor: "gray.700", borderRadius: "lg" }} p={3} mb={3} className="hover-fade" w={"100%"} onClick={fetchRoom}>
       <Flex justify="space-between">
