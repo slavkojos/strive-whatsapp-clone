@@ -9,10 +9,18 @@ import { MessagesWindow } from "../components/ChatWindow/MessagesWindow";
 import { useRef, useState, useEffect } from "react";
 
 interface ChatWindowProps {}
+interface MutableRefObject<T> {
+  current: T;
+}
+function useRef<T>(initialValue: T): MutableRefObject<T>;
 
 export const ChatWindow: React.FC<ChatWindowProps> = ({}) => {
+  const sendMessage = () => {
+    console.log(messageInput);
+    setMessageInput("");
+  };
   const [messageInput, setMessageInput] = useState<string>("");
-  const messageInputRef = useRef<HTMLInputElement | null>();
+  const messageInputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     messageInputRef.current.focus();
   });
@@ -58,7 +66,17 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({}) => {
             />
           </Flex>
           {messageInput.length > 0 ? (
-            <IconButton variant="solid" aria-label="back" icon={<MdSend />} size="md" isRound backgroundColor="teal.900" />
+            <IconButton
+              variant="solid"
+              aria-label="back"
+              icon={<MdSend />}
+              size="md"
+              isRound
+              backgroundColor="teal.900"
+              onClick={() => {
+                sendMessage();
+              }}
+            />
           ) : (
             <IconButton variant="solid" aria-label="back" icon={<BsMic />} size="md" isRound backgroundColor="teal.900" />
           )}

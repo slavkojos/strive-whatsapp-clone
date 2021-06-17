@@ -1,14 +1,29 @@
 import React from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Box, Flex, Container, Text, IconButton } from "@chakra-ui/react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { GoSearch } from "react-icons/go";
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Menu, MenuItem, MenuButton, MenuList } from "@chakra-ui/react";
 import { Contact } from "../components/MainScreen/Contact";
+import { Link as RouterLink } from "react-router-dom";
 import "./styles.css";
+import { ContactSearch } from "../components/MainScreen/ContactSearch";
 
 interface HomeProps {}
-
+const userID = "60ca107f86f4a446d882ebde";
 export const Home: React.FC<HomeProps> = ({}) => {
+  const [userData, setUserData] = useState([]);
+
+  const fetchData = useCallback(async () => {
+    const response = await fetch(`http://localhost:4000/whatsapp/rooms/me/${userID}`);
+    setUserData(await response.json());
+  }, []);
+  useEffect(() => {
+    // fetch user's rooms here
+    fetchData();
+  }, []);
+  console.log(userData);
+
   return (
     <Container maxW="container.sm" p={0} centerContent h={"100vh"}>
       <Flex align="stretch" justify="center" direction="column" backgroundColor="teal.900" w={"100%"}>
@@ -19,13 +34,15 @@ export const Home: React.FC<HomeProps> = ({}) => {
             <Menu placement="top-end">
               <MenuButton as={IconButton} aria-label="Options" icon={<BsThreeDotsVertical />} variant="ghost" isRound />
               <MenuList zIndex={3}>
-                <MenuItem>Edit profile</MenuItem>
+                <MenuItem as={RouterLink} to="/edit-profile">
+                  Edit profile
+                </MenuItem>
                 <MenuItem>Settings</MenuItem>
               </MenuList>
             </Menu>
           </Box>
         </Flex>
-        <Tabs isFitted>
+        <Tabs isFitted isLazy={true} lazyBehavior="unmount">
           <TabList pos="sticky" top="0" left="0" right="0" backgroundColor="teal.900" zIndex={2}>
             <Tab>
               <Text casing="uppercase" fontWeight="bold">
@@ -40,25 +57,13 @@ export const Home: React.FC<HomeProps> = ({}) => {
           </TabList>
           <TabPanels backgroundColor="gray.800">
             <TabPanel px={0}>
-              <Box overflowY="auto" className="scrollbar-hidden">
-                <Flex direction="column" justify="center">
-                  <Contact />
-                  <Contact />
-                  <Contact />
-                  <Contact />
-                  <Contact />
-                  <Contact />
-                  <Contact />
-                  <Contact />
-                  <Contact />
-                  <Contact />
-                  <Contact />
-                  <Contact />
-                  <Contact />
-                </Flex>
+              <Box overflowY="auto" className="scrollbar-hidden" h={"85vh"}>
+                <Flex direction="column" justify="center"></Flex>
               </Box>
             </TabPanel>
-            <TabPanel></TabPanel>
+            <TabPanel>
+              <ContactSearch userID={userID} />
+            </TabPanel>
           </TabPanels>
         </Tabs>
       </Flex>

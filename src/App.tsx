@@ -6,6 +6,7 @@ import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Home } from "./pages/Home";
 import { ChatWindow } from "./pages/ChatWindow";
+import { EditProfile } from "./pages/EditProfile";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -14,6 +15,8 @@ export const App = () => (
       <Route path="/register" exact component={Register} />
       <Route path="/" exact component={Home} />
       <Route path="/chat" exact component={ChatWindow} />
+      <Route path="/room" exact component={ChatWindow} />
+      <Route path="/edit-profile" exact component={EditProfile} />
     </Router>
   </ChakraProvider>
 );

@@ -7,3 +7,18 @@
   -ms-overflow-style: none;
   scrollbar-width: none; /* Firefox */
 }
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.hover-fade {
+  transition: 0.4s;
+}
+
+.hover-fade:hover {
+  background-color: #2d3748;
+}
