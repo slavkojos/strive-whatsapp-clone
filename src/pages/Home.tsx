@@ -72,7 +72,9 @@ export const Home: React.FC<HomeProps> = ({ userID }) => {
                         return user._id !== userID;
                       });
                       console.log("contact: " + JSON.stringify(contact));
-                      return <Contact contact={contact} key={index} userID={userID} />;
+                      if (room.messages.length > 0) {
+                        return <Contact contact={contact} key={index} userID={userID} />;
+                      }
                     })}
                 </Flex>
               </Box>
