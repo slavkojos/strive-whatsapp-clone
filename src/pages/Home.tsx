@@ -13,16 +13,18 @@ interface HomeProps {}
 const userID = "60ca107f86f4a446d882ebde";
 export const Home: React.FC<HomeProps> = ({}) => {
   const [userData, setUserData] = useState([]);
+  const [isLoaded, setisLoaded] = useState(false);
 
   const fetchData = useCallback(async () => {
     const response = await fetch(`http://localhost:4000/whatsapp/rooms/me/${userID}`);
     setUserData(await response.json());
+    setisLoaded(true);
   }, []);
   useEffect(() => {
     // fetch user's rooms here
     fetchData();
   }, []);
-  console.log(userData);
+  console.log("userDAta", userData);
 
   return (
     <Container maxW="container.sm" p={0} centerContent h={"100vh"}>
@@ -58,7 +60,15 @@ export const Home: React.FC<HomeProps> = ({}) => {
           <TabPanels backgroundColor="gray.800">
             <TabPanel px={0}>
               <Box overflowY="auto" className="scrollbar-hidden" h={"85vh"}>
-                <Flex direction="column" justify="center"></Flex>
+                <Flex direction="column" justify="center">
+                  {isLoaded === true &&
+                    userData.userRooms.map((room) => {
+                      const contact = room.users.find((user) => user !== userID);
+                      console.log("contact: " + contact);
+
+                      return <Contact contact={contact} />;
+                    })}
+                </Flex>
               </Box>
             </TabPanel>
             <TabPanel>
