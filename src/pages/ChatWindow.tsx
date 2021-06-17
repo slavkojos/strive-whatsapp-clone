@@ -6,7 +6,7 @@ import { HiOutlineEmojiHappy } from "react-icons/hi";
 import { MdSend } from "react-icons/md";
 import { Link as RouterLink } from "react-router-dom";
 import { MessagesWindow } from "../components/ChatWindow/MessagesWindow";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 
 interface ChatWindowProps {}
 interface MutableRefObject<T> {
@@ -14,16 +14,26 @@ interface MutableRefObject<T> {
 }
 function useRef<T>(initialValue: T): MutableRefObject<T>;
 
-export const ChatWindow: React.FC<ChatWindowProps> = ({}) => {
+export const ChatWindow: React.FC<ChatWindowProps> = ({ userID }) => {
+  const [userData, setUserData] = useState([]);
+  const [isLoaded, setisLoaded] = useState(false);
+  const fetchData = useCallback(async () => {
+    const response = await fetch(`http://localhost:4000/whatsapp/rooms/me/${userID}`);
+    setUserData(await response.json());
+
+    setisLoaded(true);
+  }, []);
+  useEffect(() => {
+    // fetch user's rooms here
+    messageInputRef.current.focus();
+    fetchData();
+  }, []);
   const sendMessage = () => {
     console.log(messageInput);
     setMessageInput("");
   };
   const [messageInput, setMessageInput] = useState<string>("");
   const messageInputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    messageInputRef.current.focus();
-  });
 
   return (
     <Container maxW="container.sm" p={0} centerContent>

@@ -7,16 +7,15 @@ import { Register } from "./pages/Register";
 import { Home } from "./pages/Home";
 import { ChatWindow } from "./pages/ChatWindow";
 import { EditProfile } from "./pages/EditProfile";
-
+const userID = "60ca107f86f4a446d882ebde";
 export const App = () => (
   <ChakraProvider theme={theme}>
     <Router>
       <Route path="/login" exact component={Login} />
       <Route path="/register" exact component={Register} />
-      <Route path="/" exact component={Home} />
-      <Route path="/chat" exact component={ChatWindow} />
-      <Route path="/room" exact component={ChatWindow} />
-      <Route path="/edit-profile" exact component={EditProfile} />
+      <Route path="/" render={(props) => <Home {...props} userID={userID} />} />
+      <Route path="/chat/:roomID" render={(props) => <ChatWindow {...props} userID={userID} />} />
+      <Route path="/editprofile" exact component={EditProfile} />
     </Router>
   </ChakraProvider>
 );

@@ -7,6 +7,9 @@ interface ContactProps {}
 
 export const Contact: React.FC<ContactProps> = ({ contact, userID }) => {
   const history = useHistory();
+  console.log("contact_id", contact._id);
+  console.log("userID", userID);
+
   const fetchRoom = async () => {
     const data = {
       users: [userID, contact._id],
@@ -24,7 +27,7 @@ export const Contact: React.FC<ContactProps> = ({ contact, userID }) => {
       history.push(`/chat/${chatRoomID.roomId}`);
     } catch (error) {}
   };
-  console.log("contact prop:", contact);
+  console.log("contact prop:", contact["profilePic"]);
 
   return (
     <Box _hover={{ backgroundColor: "gray.700", borderRadius: "lg" }} p={3} mb={3} className="hover-fade" w={"100%"} onClick={fetchRoom}>

@@ -10,8 +10,8 @@ import "./styles.css";
 import { ContactSearch } from "../components/MainScreen/ContactSearch";
 
 interface HomeProps {}
-const userID = "60ca107f86f4a446d882ebde";
-export const Home: React.FC<HomeProps> = ({}) => {
+
+export const Home: React.FC<HomeProps> = ({ userID }) => {
   const [userData, setUserData] = useState([]);
   const [isLoaded, setisLoaded] = useState(false);
   const fetchData = useCallback(async () => {
@@ -62,10 +62,17 @@ export const Home: React.FC<HomeProps> = ({}) => {
               <Box overflowY="auto" className="scrollbar-hidden" h={"85vh"}>
                 <Flex direction="column" justify="center">
                   {isLoaded === true &&
-                    userData.userRooms.map((room) => {
-                      const contact = room.users.find((user) => user._id !== userID);
-                      console.log("contact: " + contact);
-                      return <Contact contact={contact} />;
+                    userData.userRooms.map((room, index) => {
+                      console.log("room", room);
+
+                      const contact = room.users.find((user) => {
+                        console.log("user", user);
+                        console.log("useriD", userID);
+
+                        return user._id !== userID;
+                      });
+                      console.log("contact: " + JSON.stringify(contact));
+                      return <Contact contact={contact} key={index} userID={userID} />;
                     })}
                 </Flex>
               </Box>
