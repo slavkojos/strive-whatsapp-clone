@@ -8,6 +8,9 @@ import { Contact } from "../components/MainScreen/Contact";
 import { Link as RouterLink } from "react-router-dom";
 import "./styles.css";
 import { ContactSearch } from "../components/MainScreen/ContactSearch";
+import { io } from "socket.io-client";
+
+const socket = io("ws://localhost:8900");
 
 interface HomeProps {}
 
@@ -22,9 +25,12 @@ export const Home: React.FC<HomeProps> = ({ userID }) => {
   }, []);
   useEffect(() => {
     // fetch user's rooms here
+    socket.on("connect", () => {
+      console.log(`You connected with id ${socket.id}`);
+      socket.emit("addUser", userID);
+    });
     fetchData();
   }, []);
-  console.log("userDAta", userData);
 
   return (
     <Container maxW="container.sm" p={0} centerContent h={"100vh"}>
@@ -63,15 +69,10 @@ export const Home: React.FC<HomeProps> = ({ userID }) => {
                 <Flex direction="column" justify="center">
                   {isLoaded === true &&
                     userData.userRooms.map((room, index) => {
-                      console.log("room", room);
-
                       const contact = room.users.find((user) => {
-                        console.log("user", user);
-                        console.log("useriD", userID);
-
                         return user._id !== userID;
                       });
-                      console.log("contact: " + JSON.stringify(contact));
+
                       if (room.messages.length > 0) {
                         return <Contact contact={contact} key={index} userID={userID} />;
                       }
