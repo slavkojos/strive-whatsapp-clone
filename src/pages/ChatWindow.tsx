@@ -14,31 +14,36 @@ interface MutableRefObject<T> {
 }
 function useRef<T>(initialValue: T): MutableRefObject<T>;
 
-export const ChatWindow: React.FC<ChatWindowProps> = ({ userID, match }) => {
+export const ChatWindow: React.FC<ChatWindowProps> = ({ userID, match, socket }) => {
+  const [messageInput, setMessageInput] = useState<string>("");
   const [roomData, setRoomData] = useState("");
   const [isLoaded, setisLoaded] = useState(false);
-  const [contactData, setContactData] = useState("");
+  const [contactData, setContactData] = useState<any>("");
   const fetchData = useCallback(async () => {
     const response = await fetch(`http://localhost:4000/whatsapp/rooms/me/room/${match.params.roomID}`);
     const data = await response.json();
 
     setRoomData(data);
-    setContactData(data.users.find((contact) => contact._id !== userID));
+    setContactData(data.users.find((contact) => contact._id !== userID)); //recipient id
     setisLoaded(true);
   }, []);
   useEffect(() => {
-    // fetch user's rooms here
     messageInputRef.current.focus();
     fetchData();
   }, []);
   const sendMessage = () => {
+    const recipientId = contactData._id;
+    console.log("sending message with text: " + messageInput);
+
     console.log(messageInput);
+    socket.emit("sendMessage", { senderId: userID, recipientId: recipientId, message: messageInput });
     setMessageInput("");
   };
-  const [messageInput, setMessageInput] = useState<string>("");
+
   const messageInputRef = useRef<HTMLInputElement>(null);
   console.log("contactData", contactData);
   console.log("roomData", roomData);
+  //console.log("id from contact", );
 
   return (
     <Container maxW="container.sm" p={0} centerContent>

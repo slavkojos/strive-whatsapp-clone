@@ -8,13 +8,10 @@ import { Contact } from "../components/MainScreen/Contact";
 import { Link as RouterLink } from "react-router-dom";
 import "./styles.css";
 import { ContactSearch } from "../components/MainScreen/ContactSearch";
-import { io } from "socket.io-client";
-
-const socket = io("ws://localhost:8900");
 
 interface HomeProps {}
 
-export const Home: React.FC<HomeProps> = ({ userID }) => {
+export const Home: React.FC<HomeProps> = ({ userID, socket }) => {
   const [userData, setUserData] = useState([]);
   const [isLoaded, setisLoaded] = useState(false);
   const fetchData = useCallback(async () => {
