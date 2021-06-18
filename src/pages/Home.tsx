@@ -22,10 +22,10 @@ export const Home: React.FC<HomeProps> = ({ userID, socket }) => {
   }, []);
   useEffect(() => {
     // fetch user's rooms here
-    socket.on("connect", () => {
-      console.log(`You connected with id ${socket.id}`);
-      socket.emit("addUser", userID);
-    });
+    // socket.on("connect", () => {
+    //   console.log(`You connected with id ${socket.id}`);
+    //   socket.emit("addUser", userID);
+    // });
     fetchData();
   }, []);
 
